@@ -1,5 +1,5 @@
 
-const GENOME_LENGTH = 5
+const GENOME_LENGTH = 8
 
 # Individuals are static
 struct Individual
@@ -31,7 +31,7 @@ function generate_random_population(n::Int)
     return individuals
 end
 
-n = 100 # Population size
+n = 10 # Population size
 println("Generating random population")
 population = generate_random_population(n)
-println(population)
+println.(population)
