@@ -1,6 +1,6 @@
 using Statistics
 
-const GENOME_LENGTH = 8
+const GENOME_LENGTH = 5
 
 # Decodes a genome to the corresponding phenome
 function decode(genome::Vector{Int})
@@ -50,8 +50,7 @@ function select_parents_roulette(population::Population)
     # Select n parents from population of size n
     parents::Vector{Individual} = []
     for _ in 1:length(population.individuals)
-        r = rand()
-        selected_index = findfirst(x -> x > r, cumulative_probas)
+        selected_index = findfirst(x -> x > rand(), cumulative_probas)
         selected_individual::Individual = population.individuals[selected_index]
         push!(parents, selected_individual)
     end
@@ -124,23 +123,24 @@ function get_best_individual(population::Population)
 end
 
 # Start by generating a random initial population
-population_size = 10
-mutation_probability = 0.8
-crossover_probability = 0.8 #TODO
+population_size = 20
+mutation_rate = 0.05
+crossover_rate = 0.8 #TODO
+n_generations = 100
 
 println("Generating random population")
 population = generate_random_population(population_size)
 println.(population.individuals)
 
 # Main evolution cycle
-for generation in 1:10
+for generation in 1:n_generations
     println("--- Generation $generation ---")
 
     parents = select_parents_roulette(population)
     offspring = crossover_single_point(parents)
-    post_mutation_offspring = mutate(offspring, mutation_probability)
+    post_mutation_offspring = mutate(offspring, mutation_rate)
 
-    println("average offspring fitness: ", mean(i -> i.fitness, post_mutation_offspring)) #TODO use sum for efficiency
+    println("average offspring fitness: ", mean(i -> i.fitness, post_mutation_offspring))
 
     replace_generation!(population, post_mutation_offspring)
 end
